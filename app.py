@@ -89,7 +89,7 @@ def pretty_echo(event):
             else:
                 pretty_note = '♫♪♬'
                 pretty_text = ''
-                for i in event.message.text:
+                for i in Input:
                     pretty_text += i
                     pretty_text += random.choice(pretty_note)
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=pretty_text))
