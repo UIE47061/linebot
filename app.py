@@ -38,19 +38,19 @@ def callback():
 def pretty_echo(event):
     global state
 
-    def Input():
-        return event.message.text
-
+    In = event.message.text
     def Chose():
-        A,B,N = map(int,Input().split())
+        A,B,N = map(int,In.split())
         lst = []
         for i in range(A, B+1):
             lst.append(i)
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(random.choices(lst, k=N))))
+        random.shuffle(lst)
+        output = str(sorted(lst[:N]))
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=output))
 
-    Help = 'U1無聊做的，有bug為常態\n\n功能\n!!!打的數字一律用空白隔開!!!\n1."抽",輸入座號幾到幾，抽幾個人\n(1 22 3)1~22抽三個\n2."分"輸入全班人數,女生第一位座號,沒來的座號,全到請打0\n(22 10 1 20)全班22人，女生第一位為10號，1、22號沒來\n(22 10 0)全班22人，女生第一位為10號，全到'
+    Help = 'U1無聊做的，有bug為常態\n因為丟到伺服器運作，卡頓正常\n\n功能\n!!!打的數字一律用空白隔開!!!\n1."抽",輸入座號幾到幾，抽幾個人\n(1 22 3)1~22抽三個\n2."分"輸入全班人數,女生第一位座號,沒來的座號,全到請打0\n(22 10 1 20)全班22人，女生第一位為10號，1、22號沒來\n(22 10 0)全班22人，女生第一位為10號，全到'
     def Team():
-        lst = list(map(int,Input().split()))
+        lst = list(map(int,In.split()))
         person = []
         for i in range(1, lst[0] + 1):
             person.append(i)
@@ -75,21 +75,21 @@ def pretty_echo(event):
     print(state)    
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef": 
         if(state == False):#沒指令
-            if(Input() == '抽'):
+            if(In == '抽'):
                 state = '抽'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='幾到幾,幾個(X X X)'))
                 return     
-            elif(Input() == '分'):
+            elif(In == '分'):
                 state = '分'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='全班共幾人,女生第一號,沒來的座號(X X X)'))
                 return
-            elif(Input() == '?'):
+            elif(In == '?'):
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=Help))
                 return
             else:
                 pretty_note = '♫♪♬'
                 pretty_text = ''
-                for i in Input:
+                for i in In:
                     pretty_text += i
                     pretty_text += random.choice(pretty_note)
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=pretty_text))
