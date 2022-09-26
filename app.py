@@ -7,7 +7,7 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import configparser
 import random
 
-state = 'None' #狀態
+state = False #狀態
 
 app = Flask(__name__)
 
@@ -37,10 +37,11 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def pretty_echo(event):
     global state
+
     def Input():
         return event.message.text
 
-    def chose():
+    def Chose():
         A,B,N = map(int,Input().split())
         lst = []
         for i in range(A, B+1):
@@ -49,7 +50,7 @@ def pretty_echo(event):
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(random.choices(lst, k=N))))
 
     import random
-    def team():
+    def Team():
         lst = list(map(int,input().split()))
         person = []
         for i in range(1, lst[0] + 1):
@@ -72,9 +73,18 @@ def pretty_echo(event):
         output = '[team1]\n' + str(team1) + '\n' + '[team2]\n' + str(team2)
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=output))
 
+    def Singing():
+        pretty_note = '♫♪♬'
+        pretty_text = ''
+        for i in event.message.text:
+            pretty_text += i
+            pretty_text += random.choice(pretty_note)
+        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=pretty_text))
+
+
         
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef": 
-        if(state == 'None'):
+        if(state == False):#沒指令
             if(Input() == '抽'):
                 state = '抽'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='幾到幾,幾個(X X X)'))
@@ -83,22 +93,16 @@ def pretty_echo(event):
                 state = '分'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='全班共幾人,女生第一號,沒來的座號(X X X)'))
                 return
-        else: #沒指令
-            if(state == '抽'): #抽
-                chose()
-                state = 'None'
-            elif(state == '分'): #分
-                team()
-                state = 'None'
-        
-       
-        # Phoebe 愛唱歌
-        # pretty_note = '♫♪♬'
-        # pretty_text = ''
-        # for i in event.message.text:
-        #     pretty_text += i
-        #     pretty_text += random.choice(pretty_note)
-        #line_bot_api.reply_message(event.reply_token, TextSendMessage(text=pretty_text))
+            else:
+                state = '唱'
+        else:
+            if(state == '抽'):
+                Chose()
+            elif(state == '分'):
+                Team()
+            elif(state == '唱'):
+                Singing()
+            state = False
 
 if __name__ == "__main__":
     app.run()
