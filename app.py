@@ -7,8 +7,7 @@ from linebot.models import MessageEvent, TextMessage, TextSendMessage
 import configparser
 import random
 
-cho = False #抽
-fn = False  #分
+state = 'None' #狀態
 
 app = Flask(__name__)
 
@@ -34,10 +33,10 @@ def callback():
         abort(400)
     return 'OK'
 
-# 學你說話
+
 @handler.add(MessageEvent, message=TextMessage)
 def pretty_echo(event):
-    global cho, fn
+    global state
     def Input():
         return event.message.text
 
@@ -49,8 +48,9 @@ def pretty_echo(event):
         print(lst)
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(random.choices(lst, k=N))))
 
+    import random
     def team():
-        lst = list(map(int,Input().split()))
+        lst = list(map(int,input().split()))
         person = []
         for i in range(1, lst[0] + 1):
             person.append(i)
@@ -65,30 +65,33 @@ def pretty_echo(event):
         Blst,Glst = person[:p],person[p:]
         random.shuffle(Blst)
         random.shuffle(Glst)
-        Bp = len(Blst)// 2 + 1
-        Gp = len(Glst)// 2 - 1 
-        team1 = sorted(Blst[:Bp] + Glst[:Gp])
-        team2 = sorted(Blst[Bp:] + Glst[Gp:])
-        output = 'team1=>' + str(team1) + '\n' + 'team2=>' + str(team2)
+        Bp = len(Blst)// 2
+        Gp = len(Glst)// 2
+        team1 = sorted(Blst[:Bp] + Glst[Gp:])
+        team2 = sorted(Blst[Bp:] + Glst[:Gp])
+        output = '[team1]\n' + str(team1) + '\n' + '[team2]\n' + str(team2)
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=output))
 
         
-    if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef":        
-        if(cho): #抽
-            chose()
-            cho = False
-        elif(fn): #分
-            team()
-            fn = False
+    if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef": 
+        if(state == 'None'):
+            if(Input() == '抽'):
+                state = '抽'
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text='幾到幾,幾個(X X X)'))
+                return     
+            elif(Input() == '分'):
+                state = '分'
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text='全班共幾人,女生第一號,沒來的座號(X X X)'))
+                return
+        else: #沒指令
+            if(state == '抽'): #抽
+                chose()
+                state = 'None'
+            elif(state == '分'): #分
+                team()
+                state = 'None'
         
-        if(Input() == '抽'):
-            cho = True
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='幾到幾,幾個(X X X)'))
-            return     
-        elif(Input() == '分'):
-            fn = True
-            line_bot_api.reply_message(event.reply_token, TextSendMessage(text='全總共幾人,女生第一號,沒來的座號(X X X)'))
-            return
+       
         # Phoebe 愛唱歌
         # pretty_note = '♫♪♬'
         # pretty_text = ''
