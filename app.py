@@ -46,12 +46,11 @@ def pretty_echo(event):
         lst = []
         for i in range(A, B+1):
             lst.append(i)
-        print(lst)
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=str(random.choices(lst, k=N))))
 
-    import random
+    Help = 'U1無聊做的，有bug為常態\n\n功能\n!!!打的數字一律用空白隔開!!!\n1."抽",輸入座號幾到幾，抽幾個人\n(1 22 3)1~22抽三個\n2."分"輸入全班人數,女生第一位座號,沒來的座號,全到請打0\n(22 10 1 20)全班22人，女生第一位為10號，1、22號沒來\n(22 10 0)全班22人，女生第一位為10號，全到'
     def Team():
-        lst = list(map(int,input().split()))
+        lst = list(map(int,Input().split()))
         person = []
         for i in range(1, lst[0] + 1):
             person.append(i)
@@ -73,16 +72,7 @@ def pretty_echo(event):
         output = '[team1]\n' + str(team1) + '\n' + '[team2]\n' + str(team2)
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=output))
 
-    def Singing():
-        pretty_note = '♫♪♬'
-        pretty_text = ''
-        for i in event.message.text:
-            pretty_text += i
-            pretty_text += random.choice(pretty_note)
-        line_bot_api.reply_message(event.reply_token, TextSendMessage(text=pretty_text))
-
-
-        
+    print(state)    
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef": 
         if(state == False):#沒指令
             if(Input() == '抽'):
@@ -93,16 +83,24 @@ def pretty_echo(event):
                 state = '分'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='全班共幾人,女生第一號,沒來的座號(X X X)'))
                 return
+            elif(Input() == '?'):
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=Help))
+                return
             else:
-                state = '唱'
+                pretty_note = '♫♪♬'
+                pretty_text = ''
+                for i in event.message.text:
+                    pretty_text += i
+                    pretty_text += random.choice(pretty_note)
+                line_bot_api.reply_message(event.reply_token, TextSendMessage(text=pretty_text))
+                return
         else:
             if(state == '抽'):
                 Chose()
             elif(state == '分'):
                 Team()
-            elif(state == '唱'):
-                Singing()
             state = False
+    print(state)
 
 if __name__ == "__main__":
     app.run()
