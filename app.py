@@ -37,10 +37,11 @@ def callback():
 @handler.add(MessageEvent, message=TextMessage)
 def pretty_echo(event):
     global state
-
-    In = event.message.text
+    
+    def In():
+        return event.message.text
     def Chose():
-        A,B,N = map(int,In.split())
+        A,B,N = map(int,In().split())
         lst = []
         for i in range(A, B+1):
             lst.append(i)
@@ -50,7 +51,7 @@ def pretty_echo(event):
 
     Help = 'U1無聊做的，有bug為常態\n因為丟到伺服器運作，卡頓正常\n\n功能\n!!!打的數字一律用空白隔開!!!\n1."抽",輸入座號幾到幾，抽幾個人\n(1 22 3)1~22抽三個\n2."分"輸入全班人數,女生第一位座號,沒來的座號,全到請打0\n(22 10 1 20)全班22人，女生第一位為10號，1、22號沒來\n(22 10 0)全班22人，女生第一位為10號，全到'
     def Team():
-        lst = list(map(int,In.split()))
+        lst = list(map(int,In().split()))
         person = []
         for i in range(1, lst[0] + 1):
             person.append(i)
@@ -75,15 +76,15 @@ def pretty_echo(event):
     print(state)    
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef": 
         if(state == False):#沒指令
-            if(In == '抽'):
+            if(In() == '抽'):
                 state = '抽'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='幾到幾,幾個(X X X)'))
                 return     
-            elif(In == '分'):
+            elif(In() == '分'):
                 state = '分'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='全班共幾人,女生第一號,沒來的座號(X X X)'))
                 return
-            elif(In == '?'):
+            elif(In() == '？' or In() == "?"):
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=Help))
                 return
             else:
