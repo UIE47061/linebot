@@ -38,6 +38,8 @@ def callback():
 def pretty_echo(event):
     global state
 
+    Help = 'U1無聊做的，有bug為常態\n因為丟到伺服器運作，卡頓正常\n\n功能\n!!!打的數字一律用空白隔開!!!\n1."抽",輸入座號幾到幾，抽幾個人\n(1 22 3)1~22抽三個\n2."分"輸入全班人數,女生第一位座號,沒來的座號,全到請打0\n(22 10 1 20)全班22人，女生第一位為10號，1、22號沒來\n(22 10 0)全班22人，女生第一位為10號，全到'
+
     def Chose():
         A,B,N = map(int,event.message.text.split())
         lst = []
@@ -47,7 +49,6 @@ def pretty_echo(event):
         output = str(sorted(lst[:N]))
         line_bot_api.reply_message(event.reply_token, TextSendMessage(text=output))
 
-    Help = 'U1無聊做的，有bug為常態\n因為丟到伺服器運作，卡頓正常\n\n功能\n!!!打的數字一律用空白隔開!!!\n1."抽",輸入座號幾到幾，抽幾個人\n(1 22 3)1~22抽三個\n2."分"輸入全班人數,女生第一位座號,沒來的座號,全到請打0\n(22 10 1 20)全班22人，女生第一位為10號，1、22號沒來\n(22 10 0)全班22人，女生第一位為10號，全到'
     def Team():
         lst = list(map(int,event.message.text.split()))
         person = []
