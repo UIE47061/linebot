@@ -75,7 +75,13 @@ def pretty_echo(event):
 
     print(state)    
     if event.source.user_id != "Udeadbeefdeadbeefdeadbeefdeadbeef": 
-        if(state == False):#沒指令
+        if(state != False):#沒指令
+            if(state == '抽'):
+                Chose()
+            elif(state == '分'):
+                Team()
+            state = False
+        else:
             if(In() == '抽'):
                 state = '抽'
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text='幾到幾,幾個(X X X)'))
@@ -90,17 +96,11 @@ def pretty_echo(event):
             else:
                 pretty_note = '♫♪♬'
                 pretty_text = ''
-                for i in In:
+                for i in In():
                     pretty_text += i
                     pretty_text += random.choice(pretty_note)
                 line_bot_api.reply_message(event.reply_token, TextSendMessage(text=pretty_text))
                 return
-        else:
-            if(state == '抽'):
-                Chose()
-            elif(state == '分'):
-                Team()
-            state = False
     print(state)
 
 if __name__ == "__main__":
